@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Datacenter — SUNSWaGz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --gold:#F4AF26; --gold-bright:#FFC94D; --gold-deep:#B5790F;
+    --cream:#F6F2E2; --cream-2:#EFE4C7; --cream-hi:#FBF8EE;
+    --ink:#1E1812; --ink-soft:#5A4A38;
+    --sepia:#947242; --sepia-deep:#4B3A2D; --sepia-lite:#B09874;
+    --lotus:#EE7FA8; --lotus-deep:#C85A86;
+    --red:#C0392B; --blue:#1E5FA8;
+    --base:#1A140C; --base-2:#241a0e;
+    --line:rgba(75,58,45,.18);
+    --mono:'IBM Plex Mono',ui-monospace,monospace; --sans:'Be Vietnam Pro',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+    background-color:var(--cream);
+    background-image:
+      radial-gradient(900px 520px at 82% -6%,rgba(244,175,38,.16),transparent 60%),
+      radial-gradient(circle at 1px 1px,rgba(148,114,66,.07) 1px,transparent 0),
+      linear-gradient(180deg,var(--cream-hi),var(--cream) 30%,var(--cream) 100%);
+    background-size:auto,22px 22px,auto;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-deep);display:inline-flex;align-items:center;gap:.6em}
+  .eyebrow::before,.eyebrow::after{content:"";width:22px;height:1px;background:var(--gold-deep);opacity:.55}
+  .swag{color:var(--gold);-webkit-text-stroke:2px #fff;paint-order:stroke fill;text-shadow:0 2px 0 rgba(75,58,45,.28),0 0 1px #fff;font-weight:800;letter-spacing:-.01em}
+  .section-label{margin:0 0 20px}
+  .section-label h2{font-size:clamp(1.5rem,4.4vw,2.2rem);margin-top:10px}
+  .section-label p{color:var(--ink-soft);max-width:60ch;margin:10px 0 0;font-size:.95rem}
+  .card{position:relative;border-radius:20px;padding:30px 28px;border:1px solid rgba(181,121,15,.28);background:var(--cream-hi);margin-top:16px;box-shadow:0 16px 40px -30px rgba(75,58,45,.5);transition:transform .2s ease,box-shadow .2s ease}
+  .card:hover{transform:translateY(-2px);box-shadow:0 24px 50px -28px rgba(75,58,45,.6)}
+
+  /* baroque corners */
+  .framed{position:relative}
+  .bcorner{position:absolute;width:34px;height:34px;pointer-events:none;color:var(--gold);z-index:3;filter:drop-shadow(0 1px 0 rgba(75,58,45,.22))}
+  .bcorner svg{width:100%;height:100%;display:block}
+  .bcorner.tl{top:7px;left:7px}.bcorner.tr{top:7px;right:7px;transform:scaleX(-1)}
+  .bcorner.bl{bottom:7px;left:7px;transform:scaleY(-1)}.bcorner.br{bottom:7px;right:7px;transform:scale(-1,-1)}
+  .framed-lg .bcorner{width:46px;height:46px}
+
+  /* portrait frame for earth */
+  .portrait{position:relative;padding:16px;border-radius:18px;background:var(--cream-hi);border:2px solid var(--gold);
+    box-shadow:0 0 0 4px rgba(244,175,38,.18),0 18px 44px -28px rgba(75,58,45,.6)}
+
+  /* flourish divider */
+  .flourish{display:flex;justify-content:center;margin:34px 0 4px;color:var(--gold)}
+  .flourish svg{height:22px;width:auto}
+
+  /* imperial seal */
+  .seal{position:absolute;bottom:18px;right:18px;width:78px;height:78px;border:2px solid var(--red);border-radius:11px;color:var(--red);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;transform:rotate(-7deg);font-family:var(--mono);
+    box-shadow:inset 0 0 0 4px rgba(192,57,43,.12);opacity:.9;text-align:center;line-height:1;background:rgba(192,57,43,.04)}
+  .seal .s1{font-size:.46rem;letter-spacing:.2em}.seal .s2{font-size:1rem;margin:1px 0}.seal .s3{font-weight:600;font-size:.6rem;letter-spacing:.02em}
+
+  /* topbar */
+  .topbar{position:sticky;top:0;z-index:20;background:rgba(251,248,238,.94);backdrop-filter:blur(8px);border-bottom:2px solid var(--gold)}
+  .topbar .bar{max-width:1080px;margin:0 auto;padding:12px 20px 10px;display:flex;flex-direction:column;gap:11px}
+  .brand{font-weight:800;font-size:1.05rem;display:flex;align-items:center;gap:9px}
+  .brand .lotus{width:20px;height:17px;flex:none;animation:beat 3.5s ease-in-out infinite}
+  .brand small{font-family:var(--mono);font-weight:500;font-size:.6rem;letter-spacing:.16em;color:var(--ink-soft);text-transform:uppercase}
+  .tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch}
+  .tab{flex:0 0 auto;font-family:var(--sans);font-weight:600;font-size:.82rem;padding:8px 14px;border-radius:100px;border:1px solid var(--line);background:#fff;color:var(--ink-soft);cursor:pointer;white-space:nowrap}
+  .tab[aria-selected="true"]{background:var(--gold);color:#3a2606;border-color:var(--gold-deep);box-shadow:0 2px 0 var(--gold-deep)}
+  .tab .n{font-family:var(--mono);font-size:.62rem;opacity:.65;margin-right:5px}
+
+  .panel{display:none;padding:26px 0 50px}
+  .panel.active{display:block;animation:fade .4s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  @keyframes beat{0%,100%{opacity:.6}50%{opacity:1}}
+
+  .diagram svg.earth{width:100%;height:auto;display:block;max-width:940px;margin:0 auto}
+  .lbl-t{font-family:var(--sans);font-weight:800;font-size:15px;letter-spacing:.02em;fill:#241a10}
+  .lbl-s{font-family:var(--sans);font-weight:400;font-size:11px;fill:#6e5a40}
+  .lead{stroke:var(--sepia);stroke-width:1.3;opacity:.7}.leaddot{fill:var(--lotus)}
+  .cap{text-align:center;color:var(--ink-soft);font-size:.85rem;font-family:var(--mono);letter-spacing:.04em;margin-top:10px}
+
+  .smap{display:grid;grid-template-columns:1fr 44px 1fr;gap:12px 0}
+  .smap .hd{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);text-align:center;padding-bottom:4px}
+  .sbox{border-radius:12px;padding:13px 15px;font-size:.88rem;display:flex;flex-direction:column;justify-content:center;min-height:58px}
+  .sbox b{display:block;font-size:.92rem}.sbox span{font-size:.78rem;opacity:.82}
+  .arrow{display:grid;place-items:center;color:var(--gold-deep);font-size:1.1rem}
+  .s-app{background:rgba(238,127,168,.13);border:1px solid rgba(238,127,168,.4)}
+  .s-gate{background:rgba(244,175,38,.16);border:1px solid var(--gold)}
+  .s-os{background:var(--sepia-deep);color:#F3E9D6}
+  .s-chip{background:rgba(148,114,66,.18);border:1px solid rgba(148,114,66,.45)}
+  .s-power{background:radial-gradient(120% 160% at 50% 140%,#3a2606,#1a140c);color:#FBEFD4}
+  .s-os.hot,.s-gate.hot{box-shadow:0 0 0 2px var(--gold-bright)}
+  .divider-note{grid-column:1/-1;font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-deep);text-align:center;margin:4px 0 -2px}
+
+  .tl{display:flex;gap:10px;margin-top:18px;overflow-x:auto;padding-bottom:6px}
+  .tstep{flex:1 0 148px;border-radius:14px;padding:16px 15px;background:#fff;border:1px solid var(--line)}
+  .tstep .era{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+  .tstep h4{font-weight:800;font-size:1rem;margin:6px 0 4px}.tstep p{font-size:.8rem;color:var(--ink-soft)}
+  .tstep.now{background:linear-gradient(135deg,var(--gold),var(--gold-deep));border-color:var(--gold-deep);color:#3a2606}
+  .tstep.now .era,.tstep.now p{color:#5a3d09}.tstep.now h4{color:#3a2606}
+  .cons{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+  .con{padding:9px 15px;border-radius:100px;border:1px solid var(--line);font-size:.84rem;background:#fff}
+
+  .duals{display:flex;flex-direction:column;gap:18px}
+  .dual .ends{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px;gap:12px}
+  .dual .pos{font-weight:600;font-size:.9rem;color:var(--gold-deep)}
+  .dual .neg{font-weight:600;font-size:.9rem;color:var(--red);text-align:right}
+  .dual .track{position:relative;height:9px;border-radius:100px;background:linear-gradient(90deg,var(--gold),#c98a3a 50%,var(--red))}
+  .dual .pivot{position:absolute;left:50%;top:50%;width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid var(--ink);transform:translate(-50%,-50%)}
+  .dualnote{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;color:var(--ink-soft);text-align:center;margin-top:20px}
+
+  .fork{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center}
+  .fork-src{border-radius:14px;padding:16px 18px;background:var(--sepia-deep);color:#F3E9D6;font-weight:600;max-width:210px;font-size:.92rem}
+  .fork-src span{display:block;font-weight:400;font-size:.78rem;opacity:.82;margin-top:4px}
+  .fork-out{display:flex;flex-direction:column;gap:12px}
+  .fbranch{border-radius:14px;padding:14px 16px;font-size:.9rem;display:flex;gap:12px;align-items:flex-start}
+  .fbranch .ar{font-family:var(--mono);font-weight:600;flex:none;font-size:1.1rem}
+  .fbranch b{display:block}.fbranch span{font-size:.8rem;opacity:.85}
+  .f-up{background:rgba(244,175,38,.14);border:1px solid var(--gold)}.f-up .ar{color:var(--gold-deep)}
+  .f-down{background:radial-gradient(120% 160% at 50% 140%,#3a2606,#1a140c);color:#FBEFD4;border:1px solid rgba(244,175,38,.3)}.f-down .ar{color:var(--gold-bright)}
+
+  .stack{display:flex;flex-direction:column;gap:13px;margin-top:16px}
+  .layer{border-radius:18px;padding:22px 24px}
+  .layer .lh{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;margin-bottom:3px}
+  .depth{font-family:var(--mono);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;opacity:.85}
+  .layer h3{font-weight:800;font-size:clamp(1.2rem,3.2vw,1.5rem);letter-spacing:-.015em}
+  .layer p{font-size:.9rem;margin-top:6px;max-width:62ch}.stat{font-family:var(--mono);font-weight:600}
+  .l-top{background:#fff;border:1px solid var(--line)}.l-top .depth{color:var(--lotus-deep)}
+  .l-mid{background:linear-gradient(155deg,#6e5436,var(--sepia-deep));color:#F3E9D6}.l-mid .depth{color:#E7C98F}.l-mid p{color:#D8C5A6}
+  .l-base{background:radial-gradient(120% 130% at 50% 130%,#3a2606,var(--base-2) 48%,var(--base));color:#FBEFD4}.l-base .depth{color:var(--gold-bright)}.l-base p{color:#E2CFA6}.l-base .stat{color:var(--gold-bright)}
+
+  .feed{position:relative;margin-left:6px}
+  .feed::before{content:"";position:absolute;left:13px;top:6px;bottom:30px;width:1px;background:linear-gradient(180deg,var(--lotus),var(--sepia),var(--gold))}
+  .node{position:relative;padding:0 0 22px 44px}
+  .node .num{position:absolute;left:0;top:-2px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-family:var(--mono);font-size:.66rem;font-weight:600;background:#fff;border:1px solid var(--gold-deep);color:var(--gold-deep)}
+  .node h4{font-size:.98rem;font-weight:700;letter-spacing:-.01em;margin-bottom:5px;color:var(--ink)}
+  .node p{font-size:.88rem;color:var(--ink-soft);max-width:62ch}
+  .node.anchor .num,.node.fresh .num{background:var(--gold);color:#3a2606;border-color:var(--gold-deep);box-shadow:0 0 12px rgba(244,175,38,.6)}
+  .node.anchor h4,.node.fresh h4{color:var(--gold-deep)}
+
+  .anchorcard{position:relative;border-radius:20px;padding:34px 28px;background:radial-gradient(140% 120% at 50% -10%,#3a2606,var(--base-2) 55%,var(--base));border:1px solid rgba(244,175,38,.3)}
+  .anchorcard .eyebrow{color:var(--gold-bright)}.anchorcard .eyebrow::before,.anchorcard .eyebrow::after{background:var(--gold-bright)}
+  .anchorcard h2{font-size:clamp(1.3rem,4vw,1.85rem);margin:14px 0 14px;max-width:26ch}
+  .anchorcard p{color:#D8C5A6;max-width:62ch;margin-bottom:12px;font-size:.95rem}.anchorcard b{color:var(--gold-bright)}
+  .status{position:relative;border-radius:20px;border:1px dashed rgba(181,121,15,.5);padding:26px;background:rgba(255,255,255,.55);margin-top:14px}
+  .pill{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;padding:6px 12px;border-radius:100px;background:var(--gold);color:#3a2606;display:inline-flex;align-items:center;gap:8px;margin-bottom:14px}
+  .pill .dot{width:8px;height:8px;border-radius:50%;background:var(--lotus)}
+  .status p{color:var(--ink-soft);font-size:.94rem;max-width:60ch}.status p+p{margin-top:10px}
+
+  /* org chart — SUNSWaGz HUB */
+  .org{display:flex;flex-direction:column;align-items:center;margin-top:6px}
+  .orgcard{text-align:center;border-radius:16px;padding:15px 24px;background:var(--cream-hi);border:1px solid rgba(181,121,15,.3);box-shadow:0 12px 30px -26px rgba(75,58,45,.5)}
+  .orgcard b{display:block;font-weight:800;font-size:1.05rem;color:var(--ink)}
+  .orgcard span{display:block;font-size:.76rem;color:var(--ink-soft);margin-top:3px}
+  .orgcard.ceo{background:linear-gradient(135deg,var(--gold),var(--gold-deep));border-color:var(--gold-deep)}
+  .orgcard.ceo b{color:#3a2606}.orgcard.ceo span{color:#5a3d09}
+  .orgcard.hub b{color:var(--gold-deep)}
+  .org-line{width:2px;height:22px;background:linear-gradient(180deg,var(--gold),var(--sepia))}
+  .org-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;width:100%;margin-top:2px}
+  .dept{position:relative;border-radius:16px;padding:15px 15px;background:#fff;border:1px solid var(--line);box-shadow:0 12px 30px -28px rgba(75,58,45,.5)}
+  .dept .tag{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-deep)}
+  .dept h4{font-weight:800;font-size:1rem;margin:5px 0 4px;color:var(--ink)}
+  .dept p{font-size:.78rem;color:var(--ink-soft)}
+  .dept.core{background:linear-gradient(160deg,rgba(244,175,38,.18),rgba(244,175,38,.05));border-color:var(--gold)}
+  .dept.core .badge{position:absolute;top:10px;right:10px;font-family:var(--mono);font-size:.52rem;letter-spacing:.08em;background:var(--gold);color:#3a2606;padding:2px 7px;border-radius:100px;font-weight:600}
+  .callout{border-radius:14px;padding:14px 16px;margin-top:14px;font-size:.86rem;display:flex;gap:11px;align-items:flex-start;line-height:1.45}
+  .callout .ic{flex:none;font-size:1.05rem;line-height:1.2}
+  .c-warn{background:rgba(192,57,43,.07);border:1px solid rgba(192,57,43,.35)}.c-warn .ic{color:var(--red)}.c-warn b{color:var(--red)}
+  .c-dna{background:radial-gradient(120% 140% at 50% -20%,#3a2606,#1a140c);color:#FBEFD4;border:1px solid rgba(244,175,38,.3)}.c-dna b{color:var(--gold-bright)}.c-dna .ic{color:var(--gold-bright)}
+  @media(max-width:680px){.org-row{grid-template-columns:1fr 1fr}}
+  @media(max-width:430px){.org-row{grid-template-columns:1fr}}
+
+  @media(max-width:760px){
+    .smap{grid-template-columns:1fr}.smap .hd{display:none}.smap .arrow{transform:rotate(90deg);margin:-4px 0}
+    .fork{grid-template-columns:1fr}.fork-src{max-width:none}
+    .layer{padding:20px}.card{padding:24px 20px}.anchorcard{padding:28px 20px}
+    .bcorner{width:26px;height:26px}.framed-lg .bcorner{width:34px;height:34px}
+    .seal{width:64px;height:64px;bottom:14px;right:14px}
+  }
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.panel.active{animation:none}.brand .lotus{animation:none}.card{transition:none}}
+  :focus-visible{outline:2px solid var(--gold-deep);outline-offset:3px;border-radius:6px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="bar">
+    <span class="brand">
+      <svg class="lotus" viewBox="0 0 24 20" aria-hidden="true"><g fill="#EE7FA8" stroke="#C85A86" stroke-width=".5">
+        <ellipse cx="12" cy="10" rx="3" ry="8.5"/>
+        <ellipse cx="12" cy="11" rx="2.7" ry="7.2" transform="rotate(-34 12 15)"/>
+        <ellipse cx="12" cy="11" rx="2.7" ry="7.2" transform="rotate(34 12 15)"/>
+        <ellipse cx="12" cy="12" rx="2.3" ry="5.6" transform="rotate(-64 12 16)"/>
+        <ellipse cx="12" cy="12" rx="2.3" ry="5.6" transform="rotate(64 12 16)"/>
+      </g></svg>
+      <span class="swag">SUNSWaGz</span><small>Datacenter · thế giới AI</small>
+    </span>
+    <div class="tabs" role="tablist" aria-label="Mục datacenter">
+      <button class="tab" role="tab" data-target="p-model"><span class="n">01</span>Mô hình</button>
+      <button class="tab" role="tab" data-target="p-platform"><span class="n">02</span>Nền tảng</button>
+      <button class="tab" role="tab" data-target="p-edge"><span class="n">03</span>Hai lưỡi</button>
+      <button class="tab" role="tab" data-target="p-log"><span class="n">04</span>Nhật ký</button>
+      <button class="tab" role="tab" data-target="p-anchor"><span class="n">05</span>Neo &amp; trạng thái</button>
+      <button class="tab" role="tab" data-target="p-hub"><span class="n">06</span>HUB</button>
+    </div>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <!-- TAB 1 -->
+  <section class="panel" id="p-model" role="tabpanel">
+    <div class="section-label"><span class="eyebrow">Mô hình trái đất</span><h2 class="swag">Lõi là điện, các tầng bao quanh</h2>
+      <p>Đọc từ lõi ra: điện → compute → mô hình → ứng dụng → quản trị quay vòng ngoài.</p></div>
+    <div class="diagram">
+      <div class="portrait framed framed-lg">
+      <svg class="earth" viewBox="0 0 960 480" role="img" aria-label="Mô hình trái đất AI có chú thích các tầng">
+        <defs>
+          <radialGradient id="gApp" cx="42%" cy="38%" r="65%"><stop offset="0%" stop-color="#f0d089"/><stop offset="78%" stop-color="#d8b25a"/><stop offset="100%" stop-color="#b88e3a"/></radialGradient>
+          <radialGradient id="gMod" cx="42%" cy="38%" r="65%"><stop offset="0%" stop-color="#8a6a42"/><stop offset="100%" stop-color="#4b3a2d"/></radialGradient>
+          <radialGradient id="gComp" cx="42%" cy="38%" r="65%"><stop offset="0%" stop-color="#5a3f22"/><stop offset="100%" stop-color="#2a1d10"/></radialGradient>
+          <radialGradient id="gCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#FFE9B8"/><stop offset="65%" stop-color="#F4AF26"/><stop offset="100%" stop-color="#B5790F"/></radialGradient>
+          <radialGradient id="gHi" cx="36%" cy="30%" r="50%"><stop offset="0%" stop-color="rgba(255,255,255,.5)"/><stop offset="46%" stop-color="rgba(255,255,255,0)"/></radialGradient>
+          <filter id="soft" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="14"/></filter>
+        </defs>
+        <circle cx="480" cy="240" r="172" fill="rgba(238,127,168,.30)" filter="url(#soft)"/>
+        <ellipse cx="480" cy="240" rx="200" ry="182" fill="none" stroke="rgba(30,24,18,.5)" stroke-width="1.3" stroke-dasharray="5 7"/>
+        <ellipse cx="480" cy="240" rx="170" ry="154" fill="none" stroke="rgba(244,175,38,.5)" stroke-width="1" stroke-dasharray="2 6"/>
+        <g><circle cx="480" cy="58" r="7" fill="#F4AF26"/><circle cx="480" cy="58" r="7" fill="none" stroke="rgba(244,175,38,.4)" stroke-width="6"/><animateTransform attributeName="transform" type="rotate" from="0 480 240" to="360 480 240" dur="28s" repeatCount="indefinite"/></g>
+        <circle cx="480" cy="240" r="150" fill="url(#gApp)"/>
+        <circle cx="480" cy="240" r="112" fill="url(#gMod)"/>
+        <circle cx="480" cy="240" r="72" fill="url(#gComp)"/>
+        <circle cx="480" cy="240" r="40" fill="#F4AF26" opacity="0.5" filter="url(#soft)"><animate attributeName="opacity" values="0.35;0.85;0.35" dur="4.5s" repeatCount="indefinite"/></circle>
+        <circle cx="480" cy="240" r="26" fill="url(#gCore)"/>
+        <circle cx="480" cy="240" r="150" fill="url(#gHi)"/>
+        <line class="lead" x1="480" y1="58" x2="480" y2="40"/>
+        <line class="lead" x1="586" y1="134" x2="724" y2="120"/><circle class="leaddot" cx="586" cy="134" r="3"/>
+        <line class="lead" x1="568" y1="309" x2="724" y2="338"/><circle class="leaddot" cx="568" cy="309" r="3"/>
+        <line class="lead" x1="423" y1="284" x2="236" y2="333"/><circle class="leaddot" cx="423" cy="284" r="3"/>
+        <line class="lead" x1="459" y1="225" x2="236" y2="120"/><circle class="leaddot" cx="459" cy="225" r="3"/>
+        <text class="lbl-t" x="480" y="22" text-anchor="middle">QUỸ ĐẠO · QUẢN TRỊ</text><text class="lbl-s" x="480" y="37" text-anchor="middle">Nhiều bàn tay cùng giữ cương</text>
+        <text class="lbl-t" x="732" y="118" text-anchor="start">BỀ MẶT · ỨNG DỤNG</text><text class="lbl-s" x="732" y="134" text-anchor="start">Tầng mở — chỗ bạn có cửa</text>
+        <text class="lbl-t" x="732" y="336" text-anchor="start">LỚP VỎ · MÔ HÌNH NỀN</text><text class="lbl-s" x="732" y="352" text-anchor="start">Hệ điều hành mới của AI</text>
+        <text class="lbl-t" x="228" y="331" text-anchor="end">LỚP PHỦ · COMPUTE</text><text class="lbl-s" x="228" y="347" text-anchor="end">Chip + CUDA = chốt chặn</text>
+        <text class="lbl-t" x="228" y="114" text-anchor="end">LÕI · ĐIỆN</text><text class="lbl-s" x="228" y="130" text-anchor="end">Không điện thì không gì chạy</text>
+      </svg>
+      </div>
+      <p class="cap">Khung vàng — mô hình trái đất của thế giới AI.</p>
+    </div>
+    <div class="stack">
+      <section class="layer l-top"><div class="lh"><span class="depth">Bề mặt · Ứng dụng</span></div><h3>Tầng mở</h3><p>Tool chạy trên mô hình qua API. Vốn thấp, rào cản thấp dần. Chỗ một người như bạn có cửa.</p></section>
+      <section class="layer l-mid"><div class="lh"><span class="depth">Lớp vỏ · Mô hình nền</span></div><h3>Tầng khóa</h3><p>OpenAI · Google · Anthropic · Meta · các lab Trung Quốc. Vốn hàng tỷ đô. Quá đắt để cạnh tranh, rẻ để dùng.</p></section>
+      <section class="layer l-base"><div class="lh"><span class="depth">Lõi · Chip · Compute · Điện</span></div><h3>Chốt chặn thật</h3><p>Nvidia <span class="stat">~85–90%</span> chip AI; TSMC làm phần lớn chip cao cấp; điện đo bằng <span class="stat">gigawatt</span>; ~<span class="stat">570 tỷ USD</span> nợ AI dự kiến 2026.</p></section>
+    </div>
+  </section>
+
+  <!-- TAB 2 -->
+  <section class="panel" id="p-platform" role="tabpanel">
+    <div class="section-label"><span class="eyebrow">AI như tầng nền tảng mới</span><h2 class="swag">AI chen lên trên stack cũ</h2>
+      <p>Tái trung gian hóa: thành tầng trên cùng mới, giáng hệ điều hành và app store hôm nay xuống thành "đường ống".</p></div>
+    <div class="card framed">
+      <div class="smap">
+        <div class="hd">Stack truyền thống</div><div></div><div class="hd">Stack AI</div>
+        <div class="sbox s-app"><b>Ứng dụng</b><span>phần mềm, web, app</span></div><div class="arrow">↔</div><div class="sbox s-app"><b>Ứng dụng AI</b><span>tool chạy trên mô hình</span></div>
+        <div class="divider-note">↓ chỗ giành nhau gắt nhất ↓</div>
+        <div class="sbox s-gate"><b>App Store · CH Play</b><span>cổng phân phối, cắt 30%</span></div><div class="arrow">↔</div><div class="sbox s-gate hot"><b>Cổng AI</b><span>đang tranh giành</span></div>
+        <div class="sbox s-os"><b>Windows · iOS · Android</b><span>hệ điều hành</span></div><div class="arrow">↔</div><div class="sbox s-os hot"><b>CUDA + Mô hình nền</b><span>nền tảng mới</span></div>
+        <div class="sbox s-chip"><b>Intel · AMD</b><span>chip</span></div><div class="arrow">↔</div><div class="sbox s-chip"><b>Nvidia</b><span>hào thật là CUDA</span></div>
+        <div class="sbox s-power"><b>Điện</b><span>cái sàn</span></div><div class="arrow">↔</div><div class="sbox s-power"><b>Điện</b><span>vẫn là cái sàn</span></div>
+      </div>
+    </div>
+    <div class="flourish" aria-hidden="true"></div>
+    <div class="section-label"><span class="eyebrow">Các đời nền tảng</span><h2 class="swag">Ai nắm trạm thu phí?</h2></div>
+    <div class="tl">
+      <div class="tstep"><div class="era">60s–70s</div><h4>Máy lớn</h4><p>IBM</p></div>
+      <div class="tstep"><div class="era">80s–90s</div><h4>PC</h4><p>Microsoft · Windows</p></div>
+      <div class="tstep"><div class="era">2000s</div><h4>Web</h4><p>Trình duyệt · Google</p></div>
+      <div class="tstep"><div class="era">2010s</div><h4>Di động</h4><p>App Store (30%)</p></div>
+      <div class="tstep now"><div class="era">Giờ</div><h4>AI</h4><p>Chưa ngã ngũ</p></div>
+    </div>
+    <div class="cons">
+      <span class="con"><b>Nhà cung cấp mô hình</b></span><span class="con"><b>Nvidia / CUDA</b></span><span class="con"><b>Cloud</b></span><span class="con"><b>Trợ lý AI kiểu mới</b></span>
+    </div>
+  </section>
+
+  <!-- TAB 3 -->
+  <section class="panel" id="p-edge" role="tabpanel">
+    <div class="section-label"><span class="eyebrow">Con dao hai lưỡi</span><h2 class="swag">Cùng một AI, hai lưỡi</h2>
+      <p>Mỗi mặt tốt đều có một mặt hại đối xứng. Kim ở giữa — nghiêng về đâu là do cách dùng.</p></div>
+    <div class="card framed">
+      <div class="duals">
+        <div class="dual"><div class="ends"><span class="pos">Lọc nhiễu, gạn sự thật</span><span class="neg">Bơm rác, deepfake, "sụp đổ mô hình"</span></div><div class="track"><span class="pivot"></span></div></div>
+        <div class="dual"><div class="ends"><span class="pos">Hòn đá mài tư duy</span><span class="neg">Cây nạng làm teo năng lực</span></div><div class="track"><span class="pivot"></span></div></div>
+        <div class="dual"><div class="ends"><span class="pos">Nâng con người lên</span><span class="neg">Thay thế con người</span></div><div class="track"><span class="pivot"></span></div></div>
+        <div class="dual"><div class="ends"><span class="pos">Trả về tự chủ &amp; kết nối</span><span class="neg">Nuôi lệ thuộc, cắt liên kết người–người</span></div><div class="track"><span class="pivot"></span></div></div>
+      </div>
+      <p class="dualnote">Kim ở giữa = cuộc đấu chưa phân thắng bại.</p>
+    </div>
+    <div class="flourish" aria-hidden="true"></div>
+    <div class="section-label"><span class="eyebrow">Vành ngoài cùng · con người</span><h2 class="swag">Cái ngã ba quyết định</h2>
+      <p>Cỗ máy rốt cuộc chạm tới con người — và người chọn ngả là chính con người.</p></div>
+    <div class="card framed">
+      <div class="fork">
+        <div class="fork-src">CỖ MÁY AI chạm tới con người<span>tâm · mục đích · tự chủ · liên kết</span></div>
+        <div class="fork-out">
+          <div class="fbranch f-up"><span class="ar">↗</span><span><b>Dùng như hòn đá mài</b><span>Con người sắc hơn, trưởng thành, giữ được lương tri.</span></span></div>
+          <div class="fbranch f-down"><span class="ar">↘</span><span><b>Dùng như cây nạng</b><span>Thôi học, thôi làm, teo dần — "chết thật sự" dù thân xác còn.</span></span></div>
+        </div>
+      </div>
+      <p class="dualnote">Thuốc chống teo tóp: tỉnh táo truy vấn — hỏi nó phục vụ mình hay thay thế mình.</p>
+    </div>
+  </section>
+
+  <!-- TAB 4 -->
+  <section class="panel" id="p-log" role="tabpanel">
+    <div class="section-label"><span class="eyebrow">Nhật ký · 22 tín hiệu</span><h2 class="swag">Toàn bộ mạch suy nghĩ</h2>
+      <p>Từ "kiếm vốn" đến "con người sẽ ra sao". Thêm nút mới ở cuối khi có model mạnh hơn.</p></div>
+    <div class="card framed">
+    <div class="feed">
+      <div class="node"><span class="num">01</span><h4>Khởi điểm — vốn &amp; "làm âm thầm"</h4><p>Kiếm tiền lặng lẽ quy về hai động cơ: làm tài sản số rồi để chợ phân phối, hoặc tự động hóa rồi bán cái tự động.</p></div>
+      <div class="node"><span class="num">02</span><h4>Quyền lực thật</h4><p>Không ở cái ngai mà ở chốt chặn — sở hữu thứ người khác buộc phải đi qua. Quyền lực thật thường âm thầm.</p></div>
+      <div class="node"><span class="num">03</span><h4>Ba tầng của thế giới AI</h4><p>Ứng dụng (mở) trên mô hình nền (khóa) trên chip·compute·điện. Quyền lực ở đáy, cơ hội ở đỉnh.</p></div>
+      <div class="node"><span class="num">04</span><h4>Bitcoin ↔ AI</h4><p>Compute là "vàng" của AI; chung nền compute + điện. Khác: AI sản xuất giá trị thật, Bitcoin khan hiếm thuần.</p></div>
+      <div class="node"><span class="num">05</span><h4>Kiểm soát AI</h4><p>Một chồng đòn bẩy — compute, năng lượng, trọng số, nhân tài, luật, phân phối, giá trị. Không ai nắm trọn.</p></div>
+      <div class="node"><span class="num">06</span><h4>Cái sàn là điện</h4><p>Không điện thì không có AI. Rút điện chỉ tạm dừng cục bộ; off-switch mòn dần khi AI luồn vào hạ tầng.</p></div>
+      <div class="node"><span class="num">07</span><h4>Điện mặt trời</h4><p>Một trụ, không phải toàn bộ lời giải — lệch pha cầu 24/7. Cần solar + lưu trữ + nguồn nền.</p></div>
+      <div class="node"><span class="num">08</span><h4>Mặt trời luôn sáng ở đâu đó</h4><p>Đúng, nhưng nút thắt là chuyển điện đi. Siêu lưới toàn cầu đẻ ra phụ thuộc xuyên lục địa.</p></div>
+      <div class="node"><span class="num">09</span><h4>Con người có làm thuê cho AI?</h4><p>Không — giá trị chảy về người chủ. AI là vật ở trung tâm, không phải ông chủ. Trừ khi nó thành tác nhân tự chủ.</p></div>
+      <div class="node"><span class="num">10</span><h4>Treadmill &amp; con voi</h4><p>Lợi nhỏ ráp thành cỗ máy không ai thiết kế. Treadmill là động cơ tăng trưởng; AI chỉ là pho mát mới nhất.</p></div>
+      <div class="node"><span class="num">12</span><h4>AI như tầng nền tảng mới</h4><p>AI tái trung gian hóa stack cũ — chen lên trên rồi giáng OS + app store xuống thành đường ống.</p></div>
+      <div class="node"><span class="num">13</span><h4>Hai tương lai song song</h4><p>AI vừa là nơi-để-đến (trợ lý riêng) vừa là nguyên liệu vô hình nhúng vào mọi sản phẩm cũ.</p></div>
+      <div class="node"><span class="num">14</span><h4>Con dao hai lưỡi</h4><p>AI vừa lọc nhiễu vừa bơm rác — slop, deepfake, bot, nguy cơ "sụp đổ mô hình" khi học trên rác nó đẻ ra.</p></div>
+      <div class="node"><span class="num">15</span><h4>Rác nội dung = ngoại ứng</h4><p>Nền tảng như nhà máy xả thải. Cần luật + truy xuất nguồn gốc + nhiều bên giám sát. Nhưng "ai canh người canh gác?"</p></div>
+      <div class="node"><span class="num">16</span><h4>Một ngai hay nhiều bàn tay</h4><p>Minh quân/hoàng đế vs quản trị phân tán. Dồn tất cả về một là cấu hình dễ vỡ nhất — chính "mệnh trời" cũng thu hồi được.</p></div>
+      <div class="node"><span class="num">17</span><h4>Cõi tu luyện (góc nhìn tâm linh)</h4><p>Lăng kính được nêu: trái đất như trường rèn linh hồn, lương tri là bài thi. Giữ siêu hình mở, lấy cái lõi đạo đức — giữ được tâm — làm phần sống được.</p></div>
+      <div class="node"><span class="num">18</span><h4>Tội thuộc về ai</h4><p>Cái hại của AI là thật. Nhưng tội cần một chủ thể, mà AI là công cụ — trách nhiệm ở người xây và người dùng. Đừng tin lời AI, hãy đòi kiểm chứng.</p></div>
+      <div class="node"><span class="num">19</span><h4>Hòn đá mài hay cây nạng</h4><p>AI có thể lấy mất ma sát đã rèn nên con người — "chết thật sự". Là chiều hướng, không phải định mệnh; thuốc giải là tỉnh táo truy vấn.</p></div>
+      <div class="node"><span class="num">20</span><h4>Tầng tác nhân — AI làm "người bán hàng"</h4><p>AI dịch từ "đợi lệnh" sang "tự hành động": tự lập kế hoạch, gọi API, giao dịch thay người. Người dùng thôi đi tìm app — họ ra lệnh, agent chạy đến các "kho" mang về. Chốt phân phối mới là kẻ làm chủ con agent nói trực tiếp với khách; muốn được nó gọi tên, người bán phải nạp dữ liệu thật, máy đọc được (AIO) — tăng cửa chứ không ép được.</p></div>
+      <div class="node"><span class="num">21</span><h4>Bức tường dữ liệu & điện hạt nhân</h4><p>Dữ liệu chữ viết chất lượng cao của nhân loại gần cạn kiệt — các lab chuyển sang Synthetic Data (AI tự tạo dữ liệu dạy nhau). Mặt tốt: phá giới hạn kho tri thức. Mặt hại: đẩy nhanh "sụp đổ mô hình" nếu rác slop chiếm tỷ lệ cao. Song song, các ông lớn (Microsoft, Google, Amazon) đang gom hợp đồng điện hạt nhân và lò SMR để nuôi datacenter — chỉ hạt nhân mới đảm bảo tải nặng liên tục 24/7 mà solar không lấp được.</p></div>
+      <div class="node fresh"><span class="num">22</span><h4>Quy trình kim hoàn — mài ngọc từ quặng AI</h4><p>Phân vai chuẩn trong stack: Perplexity đào quặng (rộng, nhanh, gắn nguồn) → ChatGPT tuyển quặng (cấu trúc hóa, xuất file MD) → Claude mài ngọc (đối chiếu, phản biện, gọt bỏ sai/thổi phồng, đóng vào KB). Mỗi bước giữ vai của mình; không model nào thay được model kia. Bước "qua Claude" là bước duy nhất có phản biện — đẹp chưa đủ, phải không có vết nứt ẩn.</p></div>
+      <div class="node anchor"><span class="num">11</span><h4>Nguyên lý neo</h4><p>Không có cái ngai nào cả. AI không tự lái — nhưng cũng không một kỵ sĩ thấy hết, mà là nhiều người và thiết chế có trách nhiệm giải trình. Năng lực ≠ dã tâm.</p></div>
+    </div>
+    </div>
+  </section>
+
+  <!-- TAB 5 -->
+  <section class="panel" id="p-anchor" role="tabpanel">
+    <div class="section-label"><span class="eyebrow">Nguyên lý neo</span></div>
+    <div class="anchorcard framed">
+      <span class="eyebrow">Neo của cả mô hình</span>
+      <h2 class="swag">Đừng tìm người cưỡi giỏi — đừng để ai cưỡi một mình</h2>
+      <p>Con ngựa đủ mạnh sẽ hất bất kỳ kỵ sĩ đơn lẻ nào. Và không một đôi mắt nào nhìn trọn con voi. Lời giải cho "AI ngày càng mạnh" không phải một tay lái thiên tài, mà là <b>nhiều bàn tay cùng giữ cương</b>: quản trị phân tán, có trách nhiệm giải trình, sửa được.</p>
+      <p>Đích: đừng để AI kiểm soát con người, và đừng để nó làm con người teo đi. Cách chắc nhất là không một ai — người hay máy — phải cưỡi một mình, và mỗi người vẫn tự mài giũa chính mình.</p>
+    </div>
+    <div class="status">
+      <span class="pill"><span class="dot"></span>SUNSWaGz · 6 mục · 22 nút · còn chờ model mạnh hơn</span>
+      <p>Tách thành từng tab cho gọn. Mỗi tab còn chỗ bồi data; cần chủ đề mới thì thêm một tab nữa vào thanh trên.</p>
+      <p>Mục tiêu rèn nó: để không bao giờ bị một cỗ máy nào dùng mà mình không hay — và để chính mình đừng teo đi.</p>
+      <div class="seal" aria-hidden="true"><span class="s1">TRIỆN</span><span class="s2">✦</span><span class="s3">SUNSWaGz</span></div>
+    </div>
+  </section>
+
+  <!-- TAB 6 -->
+  <section class="panel" id="p-hub" role="tabpanel">
+    <div class="section-label"><span class="eyebrow">Tập đoàn AI cá nhân</span><h2 class="swag">SUNSWaGz HUB — mỗi model một phòng ban</h2>
+      <p>Không xài nhiều AI rời rạc. Dựng một "tập đoàn AI": SUNSWaGz là CEO, HUB điều phối, mỗi model giữ một phòng ban chuyên trách — một cửa, một đầu mối.</p></div>
+    <div class="card framed">
+      <div class="org">
+        <div class="orgcard ceo"><b>CEO · SUNSWaGz</b><span>Chủ tịch — điều phối tối cao</span></div>
+        <div class="org-line"></div>
+        <div class="orgcard hub"><b>SUNSWaGz HUB</b><span>Trung tâm điều phối toàn bộ AI</span></div>
+        <div class="org-line"></div>
+        <div class="org-row">
+          <div class="dept core"><span class="badge">AI LÕI</span><span class="tag">R&amp;D · Thi công</span><h4>Claude</h4><p>Code, HTML/CSS/JS, công cụ, kiến trúc hệ thống. Nhà máy sản xuất — không phải chatbot.</p></div>
+          <div class="dept"><span class="tag">Marketing · Truyền thông</span><h4>ChatGPT</h4><p>Content, hình ảnh, thumbnail, chiến lược, định vị thương hiệu.</p></div>
+          <div class="dept"><span class="tag">Nghiên cứu thị trường</span><h4>Perplexity</h4><p>Thu thập dữ liệu, theo dõi thị trường &amp; đối thủ. Cấp đầu vào, không ra quyết định.</p></div>
+          <div class="dept"><span class="tag">Văn phòng · Hành chính</span><h4>Gemini</h4><p>Gmail, Drive, Docs, Sheets.</p></div>
+        </div>
+      </div>
+      <div class="callout c-warn"><span class="ic">⚠</span><span><b>Điểm nghẽn:</b> Claude là trung tâm sản xuất — Claude bị limit thì cả dây chuyền đứng, các phòng khác không có sản phẩm mới để xử lý. Đúng cái chốt chặn ở nút 02, nhưng lần này nằm ngay trong nhà mình.</span></div>
+      <div class="callout c-dna"><span class="ic">✦</span><span><b>DNA của HUB — Knowledge Base:</b> tri thức tập đoàn phải sống độc lập, không lệ thuộc Claude hay bất kỳ model nào, mang sang AI nào cũng chạy. Đó mới là thứ phá được điểm nghẽn trên.</span></div>
+    </div>
+
+    <div class="flourish" aria-hidden="true"></div>
+    <div class="section-label"><span class="eyebrow">DNA tập đoàn</span><h2 class="swag">Knowledge Base — tri thức sống ngoài AI</h2>
+      <p>Mỗi lần mở chat mới, AI như nhân viên mất trí nhớ. KB là cuốn cẩm nang nội bộ — viết một lần, dán vào AI nào cũng chạy.</p></div>
+    <div class="card framed">
+      <div class="stack">
+        <section class="layer l-base">
+          <div class="lh"><span class="depth">Công nghệ lõi</span></div>
+          <h3>Markdown + Git</h3>
+          <p>File của bạn, không khóa vào model nào. Obsidian để soạn/đọc. GitHub Private để lưu + version. Vector DB/RAG: chưa cần — thêm khi KB phình to.</p>
+        </section>
+        <section class="layer l-mid">
+          <div class="lh"><span class="depth">Cấu trúc repo</span></div>
+          <h3>sunswagz-hub/</h3>
+          <p>00_constitution · 01_standards · 02_sop · 03_templates · 04_knowledge · 05_decisions · 06_assets · _inbox · <b>context-pack.md</b></p>
+        </section>
+        <section class="layer l-top">
+          <div class="lh"><span class="depth">Vũ khí số 1</span></div>
+          <h3>context-pack.md</h3>
+          <p>Bản nén "mình là ai / luật / đang làm gì". Dán vào đầu mỗi phiên với AI bất kỳ → nhân viên mới đọc xong biết việc ngay. Đây là thứ phá điểm nghẽn Claude-limit.</p>
+        </section>
+      </div>
+      <div class="callout c-dna" style="margin-top:16px"><span class="ic">⟳</span><span><b>Vòng lặp gạn tri thức:</b> Perplexity đào quặng → ChatGPT tuyển quặng (xuất .md) → Claude mài ngọc (phản biện + gọt) → lưu vào KB → dán context-pack vào phiên mới. Mỗi vòng KB dày thêm một lớp.</span></div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  // baroque corner ornament
+  const CORNER='<svg viewBox="0 0 40 40" aria-hidden="true">'+
+    '<path d="M4 4 L4 17 M4 4 L17 4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/>'+
+    '<path d="M4 17 C4 24 11 24 12 18 C12.6 14.5 9 13 7.5 15.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>'+
+    '<path d="M17 4 C24 4 24 11 18 12 C14.5 12.6 13 9 15.5 7.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>'+
+    '<circle cx="4" cy="4" r="2.4" fill="currentColor"/></svg>';
+  document.querySelectorAll('.framed').forEach(el=>{
+    ['tl','tr','bl','br'].forEach(pos=>{const s=document.createElement('span');s.className='bcorner '+pos;s.innerHTML=CORNER;el.appendChild(s);});
+  });
+  // flourish divider
+  const FLOUR='<svg viewBox="0 0 240 24" fill="none" stroke="currentColor" aria-hidden="true">'+
+    '<path d="M14 12 H86" stroke-width="1.4" stroke-linecap="round"/>'+
+    '<path d="M154 12 H226" stroke-width="1.4" stroke-linecap="round"/>'+
+    '<path d="M86 12 C96 12 100 6 108 7" stroke-width="1.4" stroke-linecap="round"/>'+
+    '<path d="M154 12 C144 12 140 6 132 7" stroke-width="1.4" stroke-linecap="round"/>'+
+    '<path d="M120 4 L128 12 L120 20 L112 12 Z" fill="currentColor" stroke="none"/>'+
+    '<circle cx="92" cy="12" r="1.7" fill="currentColor"/><circle cx="148" cy="12" r="1.7" fill="currentColor"/></svg>';
+  document.querySelectorAll('.flourish').forEach(f=>f.innerHTML=FLOUR);
+
+  // tabs
+  const tabs=[...document.querySelectorAll('.tab')];
+  const panels=[...document.querySelectorAll('.panel')];
+  function activate(id){
+    tabs.forEach(t=>t.setAttribute('aria-selected', String(t.dataset.target===id)));
+    panels.forEach(p=>p.classList.toggle('active', p.id===id));
+    window.scrollTo(0,0);
+  }
+  tabs.forEach(t=>t.addEventListener('click',()=>activate(t.dataset.target)));
+  tabs.forEach((t,i)=>t.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'){const n=tabs[(i+1)%tabs.length];n.focus();n.click();}
+    if(e.key==='ArrowLeft'){const n=tabs[(i-1+tabs.length)%tabs.length];n.focus();n.click();}
+  }));
+  activate('p-model');
+</script>
+</body>
+</html>
